@@ -44,7 +44,7 @@
                         type="object"
                         string="Mark as done"
                         class="btn-primary"
-                        states="in_progress"
+                        states="in_progress,error"
                     />
                     <button
                         name="action_cancel"
@@ -60,12 +60,33 @@
                         class="btn-secondary"
                         states="cancel"
                     />
+                    <button
+                        name="%(action_report_shipment_advice)d"
+                        type="action"
+                        string="Print Shipment Advice"
+                        class="btn-secondary"
+                        states="in_progress,done"
+                    />
+                    <button
+                        name="print_all_deliveryslip"
+                        type="object"
+                        string="Print Delivery Slip"
+                        class="btn-secondary"
+                        states="in_progress,done"
+                    />
                     <field
                         name="state"
                         widget="statusbar"
                         statusbar_visible="draft,confirmed,in_progress,done"
                     />
                 </header>
+                <div
+                    class="alert alert-danger mb-0"
+                    role="alert"
+                    attrs="{'invisible': [('state', '!=', 'error')]}"
+                >
+                    <field name="error_message" />
+                    </div>
                 <sheet>
                     <div class="oe_button_box" name="button_box">
                         <button
@@ -357,4 +378,13 @@
         parent="stock.menu_stock_warehouse_mgmt"
         action="shipment_advice_action"
     />
+    <!-- Shipment Advice - Print Delivery Slip -->
+    <record id="action_print_batch_delivery_slip" model="ir.actions.server">
+        <field name="name">Print Delivery Slip</field>
+        <field name="model_id" ref="shipment_advice.model_shipment_advice" />
+        <field name="binding_model_id" ref="shipment_advice.model_shipment_advice" />
+        <field name="state">code</field>
+        <field name="code">action = records.print_all_deliveryslip()
+        </field>
+    </record>
 </odoo>
